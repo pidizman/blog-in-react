@@ -8,29 +8,35 @@ export default function NewPost() {
   const [ title, setTitle ] = useState("");
   const [ author, setAuthor ] = useState("");
   const [ text, setText ] = useState("");
+  const [ error, setError ] = useState(false);
 
   const onSubmitHandler = event => {
     event.preventDefault();
 
-    const newPost = {
-      title: title,
-      author: author,
-      text: text,
-      id: uuidv4()
-    }
-    
-    fetch('https://api-for-blog.filipos01.repl.co/api/posts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newPost)
-    }).catch(err => console.log(err))
-      .finally(()=> {
-        setTitle("");
-        setAuthor("");
-        setText("");
-      })
+    if(title === "" || author === "" | text === ""){
+      setError(true);
+    }else{
+      const newPost = {
+        title: title,
+        author: author,
+        text: text,
+        id: uuidv4()
+      }
+        
+      fetch('https://api-for-blog.filipos01.repl.co/api/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newPost)
+      }).catch(err => console.log(err))
+        .finally(()=> {
+          setTitle("");
+          setAuthor("");
+          setText("");
+          setError(false);
+        })
+    };
     
     
   };
@@ -46,6 +52,7 @@ export default function NewPost() {
         <input className="input" type="text" value={text} placeholder="Text" onChange={(e) => setText(e.target.value)} />
         <input type={"submit"} />
       </form>
+      {error && "You can't send a empty value!"}
       <Footer />
     </div>
   );
